@@ -14,10 +14,7 @@ fullscreen = 1
 # 安卓权限
 android.permissions = INTERNET,ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION,ACCESS_BACKGROUND_LOCATION,SEND_SMS,CALL_PHONE,READ_PHONE_STATE,FOREGROUND_SERVICE,POST_NOTIFICATIONS,VIBRATE,RECEIVE_BOOT_COMPLETED,WAKE_LOCK
 
-# 应用特性
-android.features = android.hardware.location,android.hardware.location.gps,android.hardware.telephony
-
-# 最低 API 级别 (Android 6.0+)
+# 最低 API 级别 (Android 7.0+)
 android.minapi = 24
 android.targetapi = 33
 android.api = 33
