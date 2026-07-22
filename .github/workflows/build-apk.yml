@@ -54,7 +54,7 @@ jobs:
         run: |
           set -o pipefail
           export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-          buildozer android debug 2>&1 | tee build-output.log | tail -200
+          yes | buildozer android debug 2>&1 | tee build-output.log | tail -200
 
       - name: Upload build logs
         if: always()
