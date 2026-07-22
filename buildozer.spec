@@ -28,15 +28,6 @@ android.arch = armeabi-v7a, arm64-v8a
 # 允许大屏/老年机
 android.allow_backup = True
 
-# 启动后自动运行
-android.services = gps_service:services/gps_service.py
-
-# Java 编译参数
-android.gradle_dependencies = androidx.core:core:1.9.0
-
-# 应用退出时不真正退出，保留后台服务
-android.foreground_service_type = location
-
 # 日志级别
 android.logcat_filters = *:S
 

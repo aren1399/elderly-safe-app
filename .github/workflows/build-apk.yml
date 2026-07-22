@@ -44,7 +44,7 @@ jobs:
             buildozer-${{ runner.os }}-
 
       - name: Build APK
-        run: buildozer android debug
+        run: buildozer --verbose android debug
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
