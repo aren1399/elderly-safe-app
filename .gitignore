@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+bin/
+.eggs/
+*.apk
+*.aab
+.buildozer/
+.android/
+.android-sdk/
+.ndk/
+config.json

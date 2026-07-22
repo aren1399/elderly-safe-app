@@ -1,0 +1,53 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install system dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            git zip unzip openjdk-17-jdk \
+            autoconf automake libtool \
+            libltdl-dev libffi-dev libssl-dev \
+            cmake python3-pip \
+            libncurses5
+
+      - name: Install Buildozer
+        run: pip install buildozer Cython virtualenv
+
+      - name: Cache Android SDK & NDK
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.buildozer/android/platform
+            ~/.gradle
+            .buildozer
+          key: buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+          restore-keys: |
+            buildozer-${{ runner.os }}-
+
+      - name: Build APK
+        run: buildozer android debug
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: elderly-safe-apk
+          path: bin/*.apk
+          retention-days: 30
