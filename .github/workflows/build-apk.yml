@@ -3,7 +3,7 @@ name: Build Android APK
 on:
   push:
     branches: [main, master]
-  workflow_dispatch:  # 允许手动触发
+  workflow_dispatch:
 
 jobs:
   build:
@@ -26,29 +26,49 @@ jobs:
             autoconf automake libtool \
             libltdl-dev libffi-dev libssl-dev \
             cmake python3-pip python3-venv \
-            libncurses5 libncurses-dev \
-            libstdc++6
+            libncurses5 libncurses-dev build-essential \
+            zlib1g-dev libgles2-mesa-dev
 
-      - name: Install Buildozer
-        run: pip install buildozer Cython virtualenv
+      - name: Install Buildozer & pinned Cython
+        run: |
+          pip install --upgrade pip setuptools wheel
+          pip install "Cython<3.0" virtualenv buildozer
 
-      - name: Cache Android SDK & NDK
+      - name: Accept Android SDK licenses
+        run: |
+          mkdir -p ~/licenses
+          echo -e "\n24333f8a63b6825ea9c5514f83c2829b004d1fee" > ~/licenses/android-sdk-license
+
+      - name: Cache Buildozer
         uses: actions/cache@v4
         with:
           path: |
-            ~/.buildozer/android/platform
-            ~/.gradle
+            ~/.buildozer
             .buildozer
-          key: buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+          key: buildozer-v2-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
           restore-keys: |
-            buildozer-${{ runner.os }}-
+            buildozer-v2-${{ runner.os }}-
 
       - name: Build APK
-        run: buildozer --verbose android debug
+        run: |
+          export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+          buildozer android debug 2>&1 | tail -100
 
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: elderly-safe-apk
           path: bin/*.apk
           retention-days: 30
+
+      - name: Show build result
+        if: always()
+        run: |
+          if ls bin/*.apk 2>/dev/null; then
+            echo "APK BUILD SUCCESS"
+            ls -lh bin/
+          else
+            echo "APK BUILD FAILED - checking logs"
+            cat .buildozer/android/platform/python-for-android/build.log 2>/dev/null | tail -100 || true
+            ls -la .buildozer/ 2>/dev/null || true
+          fi
