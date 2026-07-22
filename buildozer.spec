@@ -22,6 +22,8 @@ android.minapi = 24
 android.targetapi = 33
 android.api = 33
 
+p4a.branch = develop
+
 # 架构 (armeabi-v7a 兼容大多数旧手机, arm64-v8a 兼容新手机)
 android.arch = armeabi-v7a, arm64-v8a
 
