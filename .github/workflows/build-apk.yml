@@ -73,6 +73,16 @@ jobs:
           HEADEREOF
           echo "GL wrapper header created at $GL_DIR/gl.h"
           cat "$GL_DIR/gl.h"
+          # Create stub libGL.so -> libGLESv2.so for linker
+          for ABI in aarch64-linux-android arm-linux-androideabi; do
+            for API in 24 33; do
+              LIB_DIR="$NDK_DIR/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/$ABI/$API"
+              if [ -d "$LIB_DIR" ] && [ -f "$LIB_DIR/libGLESv2.so" ]; then
+                ln -sf libGLESv2.so "$LIB_DIR/libGL.so"
+                echo "Created libGL.so stub in $LIB_DIR"
+              fi
+            done
+          done
 
       - name: Build APK
         id: build
