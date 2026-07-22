@@ -45,30 +45,51 @@ jobs:
           path: |
             ~/.buildozer
             .buildozer
-          key: buildozer-v2-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+          key: buildozer-v3-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
           restore-keys: |
-            buildozer-v2-${{ runner.os }}-
+            buildozer-v3-${{ runner.os }}-
 
       - name: Build APK
+        id: build
         run: |
+          set -o pipefail
           export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-          buildozer android debug 2>&1 | tail -100
+          buildozer android debug 2>&1 | tee build-output.log | tail -200
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: |
+            build-output.log
+            .buildozer/android/platform/python-for-android/build.log
+          retention-days: 7
 
       - name: Upload APK
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: elderly-safe-apk
-          path: bin/*.apk
+          path: |
+            bin/*.apk
+            bin/*.aab
           retention-days: 30
 
-      - name: Show build result
+      - name: Check result
         if: always()
         run: |
+          echo "=== Build directory contents ==="
+          ls -laR bin/ 2>/dev/null || echo "No bin/ directory"
+          echo ""
+          echo "=== .buildozer contents ==="
+          ls -la .buildozer/ 2>/dev/null || echo "No .buildozer/"
+          echo ""
           if ls bin/*.apk 2>/dev/null; then
-            echo "APK BUILD SUCCESS"
+            echo "=== APK BUILD SUCCESS ==="
             ls -lh bin/
           else
-            echo "APK BUILD FAILED - checking logs"
-            cat .buildozer/android/platform/python-for-android/build.log 2>/dev/null | tail -100 || true
-            ls -la .buildozer/ 2>/dev/null || true
+            echo "=== APK NOT FOUND ==="
+            echo "Checking build log for errors..."
+            grep -i "error\|failed\|exception\|traceback" build-output.log 2>/dev/null | tail -50 || true
           fi
