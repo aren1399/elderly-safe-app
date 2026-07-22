@@ -61,10 +61,14 @@ jobs:
           cat > "$GL_DIR/gl.h" << 'HEADEREOF'
           #ifndef _NDK_GL_WRAPPER_H
           #define _NDK_GL_WRAPPER_H
-          #include <GLES3/gl3.h>
-          #ifndef GL_GLEXT_PROTOTYPES
           #define GL_GLEXT_PROTOTYPES
+          #include <GLES3/gl3.h>
           #endif
+          HEADEREOF
+          cat > "$GL_DIR/glext.h" << 'HEADEREOF'
+          #ifndef _NDK_GLEXT_WRAPPER_H
+          #define _NDK_GLEXT_WRAPPER_H
+          #include <GLES2/gl2ext.h>
           #endif
           HEADEREOF
           echo "GL wrapper header created at $GL_DIR/gl.h"
