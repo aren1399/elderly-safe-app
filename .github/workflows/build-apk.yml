@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout code
@@ -25,8 +25,9 @@ jobs:
             git zip unzip openjdk-17-jdk \
             autoconf automake libtool \
             libltdl-dev libffi-dev libssl-dev \
-            cmake python3-pip \
-            libncurses5
+            cmake python3-pip python3-venv \
+            libncurses5 libncurses-dev \
+            libstdc++6
 
       - name: Install Buildozer
         run: pip install buildozer Cython virtualenv
