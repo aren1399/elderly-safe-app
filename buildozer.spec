@@ -18,10 +18,9 @@ android.permissions = INTERNET,ACCESS_FINE_LOCATION,ACCESS_COARSE_LOCATION,ACCES
 android.features = android.hardware.location,android.hardware.location.gps,android.hardware.telephony
 
 # 最低 API 级别 (Android 6.0+)
-android.minapi = 23
+android.minapi = 24
 android.targetapi = 33
 android.api = 33
-android.ndk = 25.2.9519653
 
 # 架构 (armeabi-v7a 兼容大多数旧手机, arm64-v8a 兼容新手机)
 android.arch = armeabi-v7a, arm64-v8a
