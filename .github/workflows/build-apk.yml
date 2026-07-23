@@ -47,13 +47,13 @@ jobs:
 
       - name: Pre-download NDK and fix GL headers
         run: |
-          NDK_DIR="$HOME/.buildozer/android/platform/android-ndk-r28c"
+          NDK_DIR="$HOME/.buildozer/android/platform/android-ndk-r25c"
           if [ ! -f "$NDK_DIR/toolchains/llvm/prebuilt/linux-x86_64/bin/clang" ]; then
-            echo "Downloading NDK r28c..."
-            wget -q https://dl.google.com/android/repository/android-ndk-r28c-linux.zip
-            unzip -q android-ndk-r28c-linux.zip
+            echo "Downloading NDK r25c..."
+            wget -q https://dl.google.com/android/repository/android-ndk-r25c-linux.zip
+            unzip -q android-ndk-r25c-linux.zip
             mkdir -p "$(dirname "$NDK_DIR")"
-            mv android-ndk-r28c "$NDK_DIR"
+            mv android-ndk-r25c "$NDK_DIR"
           fi
           # Create GL/gl.h wrapper that redirects to GLES
           GL_DIR="$NDK_DIR/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/GL"
